@@ -1,16 +1,24 @@
-# React + Vite
+# Invoice Management App
+A clean, responsive, and interactive Invoice Management application built to securely create, track, and manage invoices.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Github Link](https://github.com/your-username/invoice-app)
 
-Currently, two official plugins are available:
+[Live Demo Link](https://your-live-site-url.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Overview
+This is a full-featured invoice dashboard built with modern React technologies. The main goal was to handle complex global state management and strict form validation while ensuring a seamless user experience. I implemented a robust "Data Brain" using the Context API to keep the UI perfectly synced, alongside a pixel-perfect design that supports both light and dark modes.
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Complete CRUD Functionality:** Securely create, read, update, and delete invoices in real-time.
+* **Global State Management:** Utilizes React's Context API to keep the dashboard and forms perfectly synced without prop drilling.
+* **Smart Form Validation:** Real-time error handling that highlights empty fields and prevents incomplete data from saving.
+* **Theme Toggling:** Built-in Dark/Light mode that seamlessly respects user preferences.
+* **Responsive Layout:** Stacks perfectly to fit mobile screens and expands into a clean, multi-column layout on desktops.
 
-## Expanding the ESLint configuration
+## Built With
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* React.js (Hooks & Context API)
+* Vite
+* Tailwind CSS
+* React Router DOM
