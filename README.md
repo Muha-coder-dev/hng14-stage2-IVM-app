@@ -1,9 +1,9 @@
 # Invoice Management App
 A clean, responsive, and interactive Invoice Management application built to securely create, track, and manage invoices.
 
-[Github Link](https://github.com/your-username/invoice-app)
+[Github Link](https://github.com/Muha-coder-dev/hng14-stage2-IVM-app)
 
-[Live Demo Link](https://your-live-site-url.com)
+[Live Demo Link](https://muha-coder-dev.github.io/hng14-stage2-IVM-app/)
 
 ## Overview
 This is a full-featured invoice dashboard built with modern React technologies. The main goal was to handle complex global state management and strict form validation while ensuring a seamless user experience. I implemented a robust "Data Brain" using the Context API to keep the UI perfectly synced, alongside a pixel-perfect design that supports both light and dark modes.
