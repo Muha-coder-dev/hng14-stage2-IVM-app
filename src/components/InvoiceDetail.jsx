@@ -1,22 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import InvoiceForm from './InvoiceForm';
-import { InvoiceContext } from '../context/InvoiceContext'; // 1. Import the Brain
+import { InvoiceContext } from '../context/InvoiceContext'; 
 
 const InvoiceDetail = () => {
   const { id } = useParams(); 
-  const navigate = useNavigate(); // 2. The tool to change pages
+  const navigate = useNavigate(); 
   
-  // 3. Grab the delete function and the data from Context
-  const { invoices, deleteInvoice } = useContext(InvoiceContext);
+  // --- NEW: Added markAsPaid to the Context pull ---
+  const { invoices, deleteInvoice, markAsPaid } = useContext(InvoiceContext);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
 
-  // Find the exact invoice we are looking at
   const invoice = invoices.find(inv => inv.id === id);
 
-  // If someone types a bad ID in the URL, tell them it's missing
   if (!invoice) {
     return (
       <div className="w-full max-w-3xl mx-auto pt-16 text-center text-slate-800 dark:text-white font-bold text-2xl">
@@ -26,10 +24,9 @@ const InvoiceDetail = () => {
     );
   }
 
-  // 4. THE MAGIC FUNCTION
   const handleDelete = () => {
-    deleteInvoice(invoice.id); // Erase it from memory
-    navigate('/'); // Send the user back to the home screen
+    deleteInvoice(invoice.id); 
+    navigate('/'); 
   };
 
   return (
@@ -63,13 +60,20 @@ const InvoiceDetail = () => {
           <button onClick={() => setIsModalOpen(true)} className="px-6 py-3 rounded-full font-bold text-white bg-red-500 hover:bg-red-400 transition-colors">
             Delete
           </button>
-          <button className="px-6 py-3 rounded-full font-bold text-white bg-brand hover:bg-brand-light transition-colors">
-            Mark as Paid
-          </button>
+          
+          {/* --- NEW LOGIC: Button only shows if NOT paid, and triggers function on click --- */}
+          {invoice.status !== 'paid' && (
+            <button 
+              onClick={() => markAsPaid(invoice.id)} 
+              className="px-6 py-3 rounded-full font-bold text-white bg-brand hover:bg-brand-light transition-colors"
+            >
+              Mark as Paid
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Invoice Details Card - NOW USING REAL DATA */}
+      {/* Invoice Details Card */}
       <div className="bg-white dark:bg-[#1E2139] rounded-lg shadow-sm p-6 md:p-12 transition-colors">
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
           <div className="mb-8 md:mb-0">
@@ -151,7 +155,6 @@ const InvoiceDetail = () => {
               <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 rounded-full font-bold text-slate-muted bg-slate-100 dark:bg-[#252945] hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
                 Cancel
               </button>
-              {/* 5. ATTACH THE FUNCTION TO THE BUTTON */}
               <button onClick={handleDelete} className="px-6 py-3 rounded-full font-bold text-white bg-red-500 hover:bg-red-400 transition-colors">
                 Delete
               </button>

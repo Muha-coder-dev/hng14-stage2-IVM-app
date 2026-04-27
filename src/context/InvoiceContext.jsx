@@ -16,14 +16,37 @@ export const InvoiceProvider = ({ children }) => {
     setInvoices([newInvoice, ...invoices]);
   };
 
-  // --- NEW LOGIC: Filter out the deleted invoice! ---
   const deleteInvoice = (idToRemove) => {
     setInvoices(invoices.filter(invoice => invoice.id !== idToRemove));
   };
 
-  // Make sure to pass it down here!
+  // --- NEW LOGIC 1: Mark as Paid ---
+  const markAsPaid = (idToUpdate) => {
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.id === idToUpdate ? { ...invoice, status: 'paid' } : invoice
+      )
+    );
+  };
+
+  // --- NEW LOGIC 2: Update (Edit) Invoice ---
+  const updateInvoice = (idToUpdate, updatedData) => {
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.id === idToUpdate ? { ...invoice, ...updatedData } : invoice
+      )
+    );
+  };
+
   return (
-    <InvoiceContext.Provider value={{ invoices, addInvoice, deleteInvoice }}>
+    // Make sure all functions are exported in the value object!
+    <InvoiceContext.Provider value={{ 
+      invoices, 
+      addInvoice, 
+      deleteInvoice, 
+      markAsPaid, 
+      updateInvoice 
+    }}>
       {children}
     </InvoiceContext.Provider>
   );
