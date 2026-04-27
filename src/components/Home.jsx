@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import InvoiceForm from './InvoiceForm';
+import { InvoiceContext } from '../context/InvoiceContext'; // 1. Import the Brain
 
 const Home = () => {
+  // 2. Pull the REAL global data instead of mocks
+  const { invoices } = useContext(InvoiceContext);
+  
   const [isFormOpen, setIsFormOpen] = useState(false);
+  
+  // 3. The Filter State (null means "show all")
+  const [filterStatus, setFilterStatus] = useState(null);
 
-  const mockInvoices = [
-    { id: 'RT3080', paymentDue: '19 Aug 2021', clientName: 'Jensen Huang', total: 1800.90, status: 'paid' },
-    { id: 'XM9141', paymentDue: '20 Sep 2021', clientName: 'Alex Grim', total: 556.00, status: 'pending' },
-    { id: 'RG0314', paymentDue: '01 Oct 2021', clientName: 'John Morrison', total: 14002.33, status: 'paid' },
-    { id: 'RT2080', paymentDue: '12 Oct 2021', clientName: 'Alysa Werner', total: 102.04, status: 'pending' },
-    { id: 'AA1449', paymentDue: '14 Oct 2021', clientName: 'Mellisa Clarke', total: 4032.33, status: 'pending' },
-    { id: 'TY9141', paymentDue: '31 Oct 2021', clientName: 'Thomas Wayne', total: 6155.91, status: 'pending' },
-    { id: 'FV2353', paymentDue: '12 Nov 2021', clientName: 'Anita Wainwright', total: 3102.04, status: 'draft' }
-  ];
+  // 4. Toggle the filter on and off
+  const handleFilterClick = (status) => {
+    const lowerStatus = status.toLowerCase();
+    // If it's already clicked, turn it off. Otherwise, set it to the new status.
+    setFilterStatus((prevStatus) => (prevStatus === lowerStatus ? null : lowerStatus));
+  };
+
+  // 5. Apply the filter before mapping to the screen
+  const filteredInvoices = filterStatus
+    ? invoices.filter((invoice) => invoice.status === filterStatus)
+    : invoices;
 
   return (
     <div className="w-full max-w-3xl mx-auto pt-8 md:pt-16 pb-12 relative">
@@ -24,33 +33,49 @@ const Home = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white tracking-[-1px]">
             Invoices
           </h1>
+          {/* Dynamic Invoice Counter */}
           <p className="text-slate-muted text-sm mt-1">
-            <span className="hidden md:inline">There are </span>4 pending<span className="hidden md:inline"> invoices</span>
+            <span className="hidden md:inline">There are </span>
+            {filteredInvoices.length} {filterStatus ? filterStatus : 'total'}
+            <span className="hidden md:inline"> invoices</span>
           </p>
         </div>
 
         <div className="flex items-center gap-4 md:gap-10">
           
-          <div className="relative group cursor-pointer">
+          <div className="relative group cursor-pointer z-20">
             <div className="flex items-center gap-3 font-bold text-slate-800 dark:text-white group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
-              <span className="hidden md:inline">Filter by status</span>
+              <span className="hidden md:inline">
+                {filterStatus ? `Filtering: ${filterStatus}` : 'Filter by status'}
+              </span>
               <span className="md:hidden">Filter</span>
               <span className="text-brand text-xs">▼</span>
             </div>
             
-            <div className="absolute top-8 right-0 md:-left-4 w-48 bg-white dark:bg-[#252945] rounded-lg shadow-xl p-6 hidden group-hover:flex flex-col gap-4 z-20">
-              {['Draft', 'Pending', 'Paid'].map((status) => (
-                <label key={status} className="flex items-center gap-3 cursor-pointer group/box">
-                  <div className="w-4 h-4 rounded-sm border border-transparent bg-slate-100 dark:bg-[#1E2139] group-hover/box:border-brand flex items-center justify-center transition-colors">
-                    {status === 'Pending' && (
-                      <div className="w-full h-full bg-brand rounded-sm flex items-center justify-center">
-                        <svg width="10" height="8" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 4.5l2.124 2.124L8.97 1.28" stroke="#FFF" strokeWidth="2" fill="none" fillRule="evenodd"/></svg>
-                      </div>
-                    )}
+            <div className="absolute top-8 right-0 md:-left-4 w-48 bg-white dark:bg-[#252945] rounded-lg shadow-xl p-6 hidden group-hover:flex flex-col gap-4">
+              {['Draft', 'Pending', 'Paid'].map((status) => {
+                const isSelected = filterStatus === status.toLowerCase();
+                return (
+                  <div 
+                    key={status} 
+                    onClick={() => handleFilterClick(status)} 
+                    className="flex items-center gap-3 cursor-pointer group/box"
+                  >
+                    <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors
+                      ${isSelected 
+                        ? 'bg-brand border-brand' 
+                        : 'border-transparent bg-slate-100 dark:bg-[#1E2139] group-hover/box:border-brand'}`}
+                    >
+                      {isSelected && (
+                        <svg width="10" height="8" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1.5 4.5l2.124 2.124L8.97 1.28" stroke="#FFF" strokeWidth="2" fill="none" fillRule="evenodd"/>
+                        </svg>
+                      )}
+                    </div>
+                    <span className="font-bold text-slate-800 dark:text-white capitalize">{status}</span>
                   </div>
-                  <span className="font-bold text-slate-800 dark:text-white capitalize">{status}</span>
-                </label>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -69,7 +94,8 @@ const Home = () => {
 
       {/* --- INVOICE LIST --- */}
       <div className="flex flex-col gap-4">
-        {mockInvoices.map((invoice) => (
+        {/* Map the FILTERED array, not the mock array! */}
+        {filteredInvoices.map((invoice) => (
           <Link 
             to={`/invoice/${invoice.id}`} 
             key={invoice.id}
@@ -105,6 +131,14 @@ const Home = () => {
           </Link>
         ))}
       </div>
+
+      {/* Empty State (Optional but nice to have) */}
+      {filteredInvoices.length === 0 && (
+        <div className="mt-16 text-center">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white mt-8 mb-4">There is nothing here</h2>
+          <p className="text-slate-muted">Create a new invoice by clicking the <br/> <span className="font-bold">New Invoice</span> button and get started</p>
+        </div>
+      )}
 
       {isFormOpen && <InvoiceForm onClose={() => setIsFormOpen(false)} />}
     </div>
