@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 // 1. IMPORT THE IMAGE HERE
 import myAvatar from '../assets/Image.png';
+import myLogo from '../assets/Oval.png';
 
 const Sidebar = () => {
   // 1. Check the user's system to see if they already prefer dark mode!
@@ -29,14 +30,17 @@ const Sidebar = () => {
   return (
     <div className="fixed z-50 flex md:flex-col justify-between items-center bg-[#373B53] w-full h-20 md:h-screen md:w-24 md:rounded-r-[1.5rem] overflow-hidden transition-colors">
       
-      {/* Top Logo */}
+ {/* Top Logo */}
       <Link to="/" className="w-20 md:w-full h-full md:h-24 bg-brand flex items-center justify-center rounded-r-2xl relative overflow-hidden">
-        {/* The lighter purple curve on the bottom half of the logo */}
+        {/* The lighter purple curve on the bottom half of the background */}
         <div className="absolute top-1/2 left-0 w-full h-full bg-brand-light rounded-tl-2xl"></div>
-        <div className="z-10 bg-white w-8 h-8 rounded-full flex items-center justify-center">
-          {/* Pacman shape cut out of the circle */}
-          <div className="w-full h-full bg-white rounded-full border-[10px] border-r-transparent border-t-transparent -rotate-45"></div>
-        </div>
+        
+        {/* Your New Uploaded Logo */}
+        <img 
+          src={myLogo} 
+          alt="App Logo" 
+          className="z-10 w-8 h-8 md:w-10 md:h-10 object-contain" 
+        />
       </Link>
 
       {/* Bottom Controls (Theme & Avatar) */}
